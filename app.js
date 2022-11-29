@@ -7,6 +7,7 @@ const logger = require("morgan");
 require("dotenv").config();
 const cors = require("cors");
 const passport = require("./passport/index");
+const flash = require("connect-flash");
 /* const bodyParser = require("body-parser"); */
 
 const indexRouter = require("./routes/index");
@@ -16,6 +17,7 @@ const userAPIRouter = require("./src/components/user/userAPIRouter");
 const googleAuthRouter = require("./src/components/googleAuth/googleAuthRoute");
 
 const { cookie, append } = require("express/lib/response");
+const res = require("express/lib/response");
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(passport.initialize());
 app.use(cors());
+app.use(flash());
+
 /* app.use(
   cors({
     origin: ["http://localhost:3001"],
@@ -41,10 +45,27 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use(
   "/auth",
-  passport.authenticate("local", { session: false }),
+  passport.authenticate(
+    "local",
+    { session: false } /* , (req, user, js) => {
+    const status = js.status;
+    const msg = js.msg;
+    if (status === 200) return res.status(200);
+    else if (status === 401) {
+      if (msg === "Email or password is invalid")
+        return res.status(401).json({ err: msg });
+      else if (msg === "Email and password are required")
+        return res.status(401).json({ err: msg });
+    } else if (status === 404) return res.status(404);
+  } */
+  ),
   authRouter
 );
-app.use("/api", userAPIRouter);
+app.use(
+  "/api",
+  passport.authenticate("local", { session: false }),
+  userAPIRouter
+);
 
 app.use("/google", googleAuthRouter);
 

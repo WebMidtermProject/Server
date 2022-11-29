@@ -58,19 +58,19 @@ const login = async (req, res) => {
 
   // Update refreshToken to mock data
   const hashedPwd = await bcryptjs.hash(pwd, 10);
-  const loggedUser = { email: email, password: hashedPwd, refreshToken };
+  const loggedUser = { email, password: hashedPwd, refreshToken };
   /*     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     }); */
   const otherUsers = users.filter((user) => user.email !== email);
-  const newUserDB = [...otherUsers, loggedUser];
+  const newDB = [...otherUsers, loggedUser];
   await fsPromises.writeFile(
     path.join(__dirname, "..", "..", "mock", "user", "users.json"),
-    JSON.stringify(newUserDB)
+    JSON.stringify(newDB)
   );
 
-  return res.status(200).json({ accessToken });
+  return res.status(200).json({ email: loggedUser.email, accessToken });
 };
 
 module.exports = { register, login };

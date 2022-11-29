@@ -12,20 +12,36 @@ module.exports = new LocalStrategy(
     passwordField: "password",
   },
   async (email, pwd, done) => {
-    if (!email || !pwd) {
-      return done(null, false, { error: "Email and password are required" });
-    }
+    try {
+      if (!email || !pwd) {
+        return done(null, false, {
+          status: 401,
+          msg: "Email and password are required",
+        });
+      }
 
-    const foundUser = users.find((user) => user.email === email);
-    if (!foundUser) {
-      return done(null, false, { error: "Email or password is invalid" });
-    }
+      const foundUser = users.find((user) => user.email === email);
+      if (!foundUser) {
+        return done(null, false, {
+          status: 401,
+          msg: "Email or password is invalid",
+        });
+      }
 
-    const isValidPassword = await bcryptjs.compare(pwd, foundUser.password);
-    if (isValidPassword) {
-      return done(null, foundUser, { error: "Email or password is invalid" });
-    } else {
-      return done(null, false, { error: "Email or password is invalid" });
+      const isValidPassword = await bcryptjs.compare(pwd, foundUser.password);
+      if (isValidPassword) {
+        return done(null, foundUser, {
+          status: 200,
+          msg: "successful",
+        });
+      } else {
+        return done(null, false, {
+          status: 401,
+          msg: "Email or password is invalid",
+        });
+      }
+    } catch (err) {
+      return done(err, false, { status: 404, msg: "Error!!!" });
     }
   }
 );
