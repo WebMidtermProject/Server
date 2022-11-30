@@ -3,7 +3,7 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 
 const authGoogleService = require("./googleAuthService");
-const users = require("../../mock/user/users.json");
+const knex = require("../db/configs/db-connector")
 
 module.exports.signup = async (req, res) => {
   try {
@@ -27,11 +27,11 @@ module.exports.signup = async (req, res) => {
         JSON.stringify(newUserDB)
       ); */
       const newUser = {
-        firstName: profile?.given_name,
-        lastName: profile?.family_name,
+        first_name: profile?.given_name,
+        last_name: profile?.family_name,
         picture: profile?.picture,
         email: profile?.email,
-        token: jwt.sign(
+        google_token: jwt.sign(
           { email: profile?.email },
           process.env.REFRESH_TOKEN_SECRET,
           {
@@ -39,16 +39,12 @@ module.exports.signup = async (req, res) => {
           }
         ),
       };
-
-      const newUserDB = [...users, newUser];
-      await fsPromises.writeFile(
-        path.join(__dirname, "..", "..", "mock", "user", "users.json"),
-        JSON.stringify(newUserDB)
-      );
-
+      
+      insertedUser = await knex('User').insert(newUser).returning('*')
+      
       res.status(201).json({
         message: "Signup was successful",
-        user: newUser,
+        user: insertedUser,
       });
     }
   } catch (error) {
