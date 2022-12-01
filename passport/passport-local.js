@@ -1,10 +1,8 @@
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const fsPromises = require("fs").promises;
-const path = require("path");
+const knex = require("../src/components/db/configs/db-connector")
 
 const LocalStrategy = require("passport-local").Strategy;
-const users = require("../src/mock/user/users.json");
 
 module.exports = new LocalStrategy(
   {
@@ -20,8 +18,9 @@ module.exports = new LocalStrategy(
         });
       }
 
-      const foundUser = users.find((user) => user.email === email);
-      if (!foundUser) {
+      //check email existed
+      const foundUser = await knex('User').where('email',email).first()
+      if (foundUser === undefined) {
         return done(null, false, {
           status: 401,
           msg: "Email or password is invalid",
