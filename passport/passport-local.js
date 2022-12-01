@@ -20,7 +20,7 @@ module.exports = new LocalStrategy(
 
       //check email existed
       const foundUser = await knex('User').where('email',email).first()
-      if (foundUser !== undefined) {
+      if (foundUser === undefined) {
         return done(null, false, {
           status: 401,
           msg: "Email or password is invalid",

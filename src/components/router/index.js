@@ -16,7 +16,6 @@ middlewareUser = async (req, res, next) => {
     try {
       const json = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
       if (json) {
-        console.log(json)
         req['currentUser'] = json
         next()
       }
@@ -42,17 +41,7 @@ router.use(
     "/auth",
     // passport.authenticate(
     //   "local",
-    //   { session: false } /* , (req, user, js) => {
-    //   const status = js.status;
-    //   const msg = js.msg;
-    //   if (status === 200) return res.status(200);
-    //   else if (status === 401) {
-    //     if (msg === "Email or password is invalid")
-    //       return res.status(401).json({ err: msg });
-    //     else if (msg === "Email and password are required")
-    //       return res.status(401).json({ err: msg });
-    //   } else if (status === 404) return res.status(404);
-    // } */
+    //   { session: false } 
     // ),
     authRouter
   );
