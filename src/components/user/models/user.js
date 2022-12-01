@@ -1,7 +1,12 @@
 const Base = require('../../db/models/Base.model')
 module.exports =  class User extends Base.BaseModel {
   name;
-  description;
+  email;
+  password;
+  first_name;
+  last_name;
+  picture;
+  google_token;
   initTable (table) {
     super.initTable(table)
     table.string('name')

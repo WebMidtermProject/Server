@@ -55,7 +55,7 @@ const login = async (req, res) => {
     //if password match hash password
     if (data) {
       const accessToken = jwt.sign(
-        { email: email },
+        { email: email,name: existedUser.name,id : existedUser.id },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "600s" }
       );
@@ -71,7 +71,7 @@ const login = async (req, res) => {
       const loggedUser = { email, password: hashedPwd, refreshToken };
 
     
-      return res.status(200).json({ email: loggedUser.email, accessToken });
+      return res.status(200).json({ email: loggedUser.email,name: existedUser.name,id : existedUser.id, accessToken });
     } else {
         return res.status(401).json({ msg: "Invalid credentials" })
     }

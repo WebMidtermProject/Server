@@ -1,12 +1,18 @@
 const knex = require('../configs/db-connector')
 
 const User = require('../../user/models/user') 
+const Group = require('../../group/models/group')
+const GroupAttendee = require('../../group/models/groupAttendee').GroupAttendee
 
 // Init model
 const user = new User('User')
+const group = new Group('Group')
+const groupAttendee = new GroupAttendee('GroupAttendee')
 
 const arrayModel = [
-    user
+    user,
+    group,
+    groupAttendee
 ];
 
 module.exports= (async function () {

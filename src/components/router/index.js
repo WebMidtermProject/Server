@@ -1,11 +1,12 @@
 const router = require("express").Router();
-const userRouter = require("../user/router")
 const googleAuthRouter = require("../googleAuth/googleAuthRoute")
 const createError = require("http-errors");
 const authRouter = require("../auth/authRouter");
 const passport = require("../../../passport/index");
 const jwt = require("jsonwebtoken");
 
+const userRouter = require("../user/router")
+const groupRouter = require("../group/router")
 require("dotenv").config();
 
 middlewareUser = async (req, res, next) => {
@@ -59,6 +60,7 @@ router.use(
 
 router.use("/google", googleAuthRouter)
 router.use("/user", middlewareUser,userRouter);
+router.use("/group", middlewareUser,groupRouter);
 
 // catch 404 and forward to error handler
 router.use(function (req, res, next) {
