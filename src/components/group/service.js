@@ -1,6 +1,6 @@
 const knex = require("../db/configs/db-connector");
 const groupAttendee = require("./models/groupAttendee");
-
+const mailService = require("../nodemailer/service")
 getMyGroups = async (user) => {
   group = await knex("Group as G")
     .join("GroupAttendee as GA", "GA.group_id", "G.id")
@@ -178,6 +178,28 @@ getGroupDetailService = async (user, groupID) => {
   group.memberList = members;
   return group;
 };
+
+sendInvitationMail = async (user,groupID, IDs) => {
+  if (IDs.length <= 0) {
+    return false;
+  }
+  users = await knex("User as U").whereIn("U.id", IDs).select("U.*");
+  if (users === undefined || users.length != IDs.length) {
+    return false;
+  }
+  console.log(users);
+
+  group = await knex("Group as G").where({ "G.id": groupID }).first();
+  if (group === undefined) {
+    return false;
+  }
+  users.map((user)=>{
+    mailService.sendMail(user.email,"group invitation", JSON.stringify(group))
+  })
+
+  return true;
+};
+
 module.exports = {
   getMyGroups,
   createGroupService,
@@ -185,4 +207,5 @@ module.exports = {
   addAttendee,
   addToGroup,
   getGroupDetailService,
+  sendInvitationMail
 };
