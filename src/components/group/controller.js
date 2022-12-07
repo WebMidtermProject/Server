@@ -100,8 +100,6 @@ sendInvitation = async (req, res) => {
   }
 
   const { userIDs, groupID } = req.body;
-  console.log(groupID)
-  console.log(userIDs)
   try {
     result = await service.sendInvitationMail(user, groupID, userIDs);
     return res.status(200).json({ data: result });
