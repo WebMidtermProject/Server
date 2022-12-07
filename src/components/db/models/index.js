@@ -3,16 +3,25 @@ const knex = require('../configs/db-connector')
 const User = require('../../user/models/user') 
 const Group = require('../../group/models/group')
 const GroupAttendee = require('../../group/models/groupAttendee').GroupAttendee
+const Presentation = require('../../presentation/models/presentation')
+const Slide = require('../../presentation/models/slide')
+const Answer = require('../../presentation/models/answer')
 
 // Init model
 const user = new User('User')
 const group = new Group('Group')
 const groupAttendee = new GroupAttendee('GroupAttendee')
+const presentation = new Presentation('Presentation')
+const slide = new Slide('Slide')
+const answer = new Answer('Answer')
 
 const arrayModel = [
     user,
     group,
-    groupAttendee
+    groupAttendee,
+    presentation,
+    slide,
+    answer
 ];
 
 module.exports= (async function () {
