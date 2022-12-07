@@ -9,6 +9,7 @@ router.get("/get-joined-groups", controller.getJoinedGroups);
 router.post("/create", controller.createGroup);
 router.post("/invite", controller.inviteToGroup);
 router.post("/add-attendee", controller.addAttendee);
+router.post("/send-invitation", controller.sendInvitation);
 
 router.get("/:id", controller.getGroupDetail);
 
