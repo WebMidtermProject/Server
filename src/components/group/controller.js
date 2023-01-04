@@ -1,7 +1,7 @@
 const service = require("./service");
 
 getMyGroups = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -15,7 +15,7 @@ getMyGroups = async (req, res) => {
 };
 
 createGroup = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -34,7 +34,7 @@ createGroup = async (req, res) => {
 };
 
 addAttendee = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -50,7 +50,7 @@ addAttendee = async (req, res) => {
 };
 
 inviteToGroup = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -65,7 +65,7 @@ inviteToGroup = async (req, res) => {
 };
 
 getJoinedGroups = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -79,7 +79,7 @@ getJoinedGroups = async (req, res) => {
 };
 
 getGroupDetail = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -94,7 +94,7 @@ getGroupDetail = async (req, res) => {
 };
 
 sendInvitation = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }

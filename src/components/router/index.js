@@ -3,6 +3,8 @@ const googleAuthRouter = require("../googleAuth/googleAuthRoute");
 const createError = require("http-errors");
 const authRouter = require("../auth/authRouter");
 const passport = require("../../../passport/index");
+const JwtStrategy = require("passport-jwt").Strategy
+const {ExtractJwt} = require("passport-jwt")
 const jwt = require("jsonwebtoken");
 
 const userRouter = require("../user/router");
@@ -11,29 +13,16 @@ const presentationRouter = require("../presentation/router");
 
 require("dotenv").config();
 
-middlewareUser = async (req, res, next) => {
-  // check token
-  const token = req.headers["api-token"];
-  if (token) {
-    try {
-      const json = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      if (json) {
-        req["currentUser"] = json;
-        next();
-      }
-    } catch (e) {
-      return res.json({
-        code: -100,
-        error: "ACCESS_DENIED",
-      });
-    }
-  } else {
-    return res.json({
-      code: -100,
-      error: "ACCESS_DENIED",
-    });
+passport.use(new JwtStrategy({
+  jwtFromRequest: ExtractJwt.fromHeader("api-token"),
+  secretOrKey: process.env.ACCESS_TOKEN_SECRET
+}, (user,done)=>{
+  try{
+    done(null, user)
+  }catch(error){
+    done(error,false)
   }
-};
+}))
 
 router.use(passport.initialize());
 
@@ -47,9 +36,9 @@ router.use(
 );
 
 router.use("/google", googleAuthRouter);
-router.use("/user", middlewareUser, userRouter);
-router.use("/group", middlewareUser, groupRouter);
-router.use("/presentation", middlewareUser, presentationRouter);
+router.use("/user", passport.authenticate('jwt',{session: false}), userRouter);
+router.use("/group", passport.authenticate('jwt',{session: false}), groupRouter);
+router.use("/presentation", passport.authenticate('jwt',{session: false}), presentationRouter);
 
 // catch 404 and forward to error handler
 router.use(function (req, res, next) {

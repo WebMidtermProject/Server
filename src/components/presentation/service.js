@@ -91,11 +91,25 @@ getSlideDetail= async(user, presentation_id, id) =>{
 
   return slide;
 }
+
+getMyPresentation= async(user) =>{
+  var slide;
+  slide = await knex("Presentation").where('creator_id',user.id).first('id','title');
+
+
+  if (slide == undefined || slide == null) {
+    return null;
+  }
+
+  return slide;
+}
+
 module.exports = {
   createPresentationService,
   getPresentation,
   deletePresentation,
   createSlide,
   getSlide,
-  getSlideDetail
+  getSlideDetail,
+  getMyPresentation
 };

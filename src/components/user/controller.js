@@ -1,7 +1,7 @@
 const knex = require("../db/configs/db-connector");
 
 getMyProfile = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -14,7 +14,7 @@ getMyProfile = async (req, res) => {
 };
 
 editName = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
