@@ -2,7 +2,7 @@ const Presentation = require("./models/presentation");
 const service = require("./service");
 
 getPresentation = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -20,7 +20,7 @@ getPresentation = async (req, res) => {
 };
 
 createPresentation = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -43,7 +43,7 @@ createPresentation = async (req, res) => {
 };
 
 deletePresentation = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -62,7 +62,7 @@ deletePresentation = async (req, res) => {
 };
 
 createSlide = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -87,7 +87,7 @@ createSlide = async (req, res) => {
   return res.status(200).json({ data: slide });
 };
 getSlide = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -106,7 +106,7 @@ getSlide = async (req, res) => {
 };
 
 getSlideDetail = async (req, res) => {
-  user = req["currentUser"];
+  user = req.user;
   if (user === undefined) {
     return res.status(400).json({ Error: "Invalid user" });
   }
@@ -123,11 +123,29 @@ getSlideDetail = async (req, res) => {
   }
 };
 
+getMyPresentation = async (req, res) => {
+  user = req.user;
+  if (user === undefined) {
+    return res.status(400).json({ Error: "Invalid user" });
+  }
+
+  try {
+    data = await service.getMyPresentation(user);
+    if (data === null || data === undefined || data.length === 0) {
+      return res.status(400).json({ Error: "Error occur" });
+    }
+    return res.status(200).json({ data: data });
+  } catch {
+    return res.status(404);
+  }
+};
+
 module.exports = {
   createPresentation,
   getPresentation,
   deletePresentation,
   createSlide,
   getSlide,
-  getSlideDetail
+  getSlideDetail,
+  getMyPresentation
 };
